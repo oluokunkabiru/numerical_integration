@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simpson And Trapezoidal rule</title>
+    <link rel="stylesheet" href="bootsrap/bootstrap.min.css">
+    <link rel="stylesheet" href="fontawesome-free/css/all.min.css">
+</head>
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+         <div class="row">
+             <div class="col-md-4"></div>
+             <div class="col-md-4">
+                <form id="simpsonform">
+                    <div class="form-group">
+                      <label for="email">Lower Limit</label>
+                      <input type="number" class="form-control"  step="0.01"id="lowerlimit">
+                      <span class="lerror text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Upper Limit</label>
+                        <input type="number" class="form-control" step="0.01" id="upperlimit">
+                        <span class="uerror text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Numbers of interval</label>
+                        <input type="number" class="form-control" id="ninterval">
+                        <span class="inerror text-danger"></span>
+                    </div>
+                    
+                    <h2 id="generate" class="btn btn-primary">Submit</h2>
+                  </form> 
+             </div>
+             <div class="col-md-4"></div>
+         </div>
+         <div class="row">
+             <div class="col-md-2"></div>
+             <div class="col-md-4">
+                 <h1 id="simpson" class="text-center my-4 "></h1>
+             </div>
+             <div class="col-md-4">
+                  <h1 id="trapezoid" class="text-center my-4 "></h1>
+             </div>
+         </div>
+         
+        
+        </div>
+      </div>
+
+
+<script src="bootsrap/jquery.js"></script>
+<script src="bootsrap/popper.js"></script>
+<script src="bootsrap/bootstrap.min.js"></script>
+<script>
+
+function myFX(x){
+    return Math.log(x)
+}
+
+
+// let a represent lower limit
+// let b represent uppder limit
+// let n represent numbers of interval
+    function simpson(a, b, n){
+         // Calculating the value of h 
+        var h = (b-a)/n;
+        // Array for storing value of x and f(x) 
+        var x = [];
+        var fx = [];
+        // Calculating values of x and f(x) 
+        for(i = 0; i<=n; i++){
+            x[i] = a+i*h;
+            fx[i] = myFX(x[i]);
+        }
+        // Calculating result 
+          var myresult = 0; 
+
+        for(i =0; i<= n; i++){
+            if(i==0 || i==n){
+                myresult+= fx[i];
+            }else if(i%2 !=0){
+                myresult += fx[i]*4;
+            }else{
+                myresult+= fx[i]*2;
+            }
+           
+        }
+         myresult = myresult*(h / 3);
+        return myresult;
+        // $('#va').html('oluokun kabir')
+    }
+
+    function myTrapez(x){
+        return 1/(1+x*x);
+    }
+
+    function trapezoidal(a, b, n){
+        var h  = (b-a)/n;
+        // Computing sum of first and last terms  of the input
+    // in above formula 
+        s = myTrapez(a)+myTrapez(b); 
+         // Adding middle terms in above formula 
+        for (i = 1; i < n; i++) {
+             s += 2*myTrapez(a+i*h); 
+        }
+        return (h/2)*s;
+    }
+
+
+
+    $(document).ready(function(){
+        $('#generate').click(function(){
+            var upper = $('#upperlimit').val();
+            var lower = $('#lowerlimit').val();
+            var ninter = $('#ninterval').val();
+            // alert("upper = "+ upper +" Lower = "+ lower +" interval = "+ ninter);
+           
+            if(upper == ""){
+                $('.uerror').html('Please provide upperlimit');
+            }else{
+                $('.uerror').hide();
+                var upperlimit = Number(upper);
+            }
+            if(lower == ""){
+                $('.lerror').html('Please provide lowerlimit');
+            }else{
+                $('.lerror').hide();
+                var lowerlimit = Number(lower);
+            }
+            if(ninter == ""){
+                
+                $('.inerror').html('Please provide numbers of interval');
+            }else{
+                $('.inerror').hide();
+                var ninterval = Number(ninter);
+            }
+            // alert("upper = "+ upperlimit +" Lower = "+ lowerlimit +" interval = "+ ninterval);
+            if(lower != "" && upper != "" && ninter != "" ){
+                // alert(lowerlimit);
+                // display simpson rule
+                $('#simpson').html(
+                "<div class='btn btn-block btn-primary text-white'>"    
+                +"<h1 class='my-2'> Simpson rule<h1>"
+                    + "<h2>"
+                    +simpson(lowerlimit, upperlimit, 6).toFixed(4))
+                    +"</h2>";
+                    +"</div>"
+                    // dislay trapezoidal rule
+                $('#trapezoid').html(
+                "<div class='btn btn-block btn-primary text-white'>"    
+                +"<h1 class='my-2'> Trapezoidal rule<h1>"
+                + "<h2>"
+
+                +trapezoidal(lowerlimit, upperlimit, 6).toFixed(4))
+                +"</h2>";
+                +"</div>"
+        }   
+
+})
+
+    })
+   
+</script>
+</body>
+</html>
